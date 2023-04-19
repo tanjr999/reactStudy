@@ -1,0 +1,31 @@
+import React from 'react'
+class Counter extends React.Component{
+    // 1、声明用来控制input value的react组件自己的状态
+    state = {
+        message: 'this is message'
+    }
+    // 回调函数
+    inputChange = (e) => {
+        // 获取输入框最新的值，给state中的message
+        this.setState({
+            message: e.target.value
+        })
+        console.log("change事件触发", e.target.value, this.state.message)
+    }
+    // 产出UI模板结构
+    render() {
+        return (
+            <input type='text' value={this.state.message} onChange={this.inputChange}></input>
+        )
+    }
+}
+
+function App() {
+    return (
+        <div className="App">
+            <Counter></Counter>
+        </div>
+    );
+}
+
+export default App;

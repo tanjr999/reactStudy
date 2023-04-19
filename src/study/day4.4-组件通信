@@ -1,0 +1,225 @@
+// 组件通信 - 各组件之间可进行互相沟通、数据传递
+1、父子关系 - 最重要的
+2、兄弟关系 - 自定义事件模式产生技术方法eventBus / 通过共同的父组件通信
+3、其它关系 - mobx / redux / 基于hook的方案
+
+
+// 一、父传子实现
+注意：  1、子组件只能读取props中的数据，不可修改:this.props.msg = 'new msg' 这种写法是错误的
+        2、props可以传递任意数据（数字、字符串、布尔值、数组、对象、函数、jsx）
+
+步骤:   1、父组件提供要传递的数据 - state
+        2、给子组件标签添加属性值为 state 中的数据
+        3、子组件中通过 props 接收父组件传的数据
+            （1）类组件使用 this.props 获取props对象
+            （2）函数组件直接通过参数获取props对象
+实例：   
+// App - 父组件; Son - 子组件
+import React from 'react'
+
+// 函数式的Son
+function SonF(props) {
+    // props是一个对象，里面存着通过父组件传入的所有数据
+    console.log(props)
+    // props 解构赋值
+    const {msg, list, obj, getMsg, child} = props
+    return (
+        <div>
+            <div>1、我是函数式子组件，获取父组件的 字符串 参数为：{props.msg},{msg}</div>
+            <div>2、我是函数式子组件，获取父组件的 数组 参数为：{props.list.map(item => <p key={item}>{item}</p>)}, {list.map(item => <p key={item}>{item}</p>)}</div>
+            <div>3、我是函数式子组件，获取父组件的 对象 参数为：{props.obj.name},{obj.name}</div>
+            <button onClick={props.getMsg}>4、触发父组件传入的函数</button>
+            <div>5、我是函数式子组件，获取父组件的 JSX（模板） 参数为：{props.child}, {child}</div>
+        </div>
+    )
+}
+// 类组件的Son
+class SonC extends React.Component{
+    render() {
+        return (
+            // 类组件必须通过 this 关键词去获取，这里的props是固定的
+            <div>我是类子组件，获取父组件的参数为：{this.props.msg}</div>
+        )
+    }
+} 
+
+// 父组件
+class App extends React.Component{
+    state = {
+        message: 'this is 父组件', // 传递字符串
+        list: [1, 2, 3], // 传递数组
+        userInfo: { // 传递对象
+            name: 'jack',
+            age: 18
+        }
+    }
+    getMsg = () => {
+        console.log("我是父组件的函数")
+    }
+    render() {
+        return (
+            <div>
+                {/* 在子组件身上绑定属性 */}
+                <SonF msg={this.state.message} list={this.state.list} obj={this.state.userInfo} getMsg={this.getMsg} child={<span>this is span</span>}></SonF>
+                <br></br>
+                <SonC msg={this.state.message}></SonC>
+            </div>
+        )
+    }
+} 
+
+export default App;
+
+
+
+// 二、子传父实现
+实例：
+// App - 父组件; Son - 子组件
+import React from 'react'
+// 子传父：子组件调用父组件传递过来的函数，并且把需要传递的数据当做函数的实参传入即可
+
+
+// 类组件的Son
+function Son(props) {
+    const { getSonMsg } = props
+    function clickHandler() {
+        const sonMsg = '方法2：这里是来自子组件的数据'
+        getSonMsg(sonMsg)
+    }
+    return (
+        <div>
+            <p>this is 子组件Son</p>
+            <button onClick={()=>getSonMsg('这里是来自子组件的数据')}>方法1、传递数据给父组件</button>
+            <button onClick={clickHandler}>方法2、传递数据给父组件</button>
+        </div>
+    )
+} 
+
+// 父组件
+class App extends React.Component{
+    state = {
+        list: [1,2,3]
+    }
+    // 1、准备一个函数传给子组件
+    getSonMsg = (a) => {
+        console.log("接收子组件传过来的值", a)
+    }
+    render() {
+        return (
+            <div>
+                <Son getSonMsg = {this.getSonMsg}></Son>
+            </div>
+        )
+    }
+} 
+
+export default App;
+
+
+// 三、兄弟组件通信 - 利用共同的父组件实现兄弟通信（先子传父，在父传子）
+实例：
+// App - 父组件; SonA - 子组件A; SonB - 子组件B
+import React from 'react'
+// 兄弟通信：由子组件A传给父组件后，再由父组件传给子组件B即可
+
+
+// 函数组件的SonA
+function SonA(props) {
+    const { getSonAMsg } = props
+    return (
+        <>
+            <div>我是子组件A</div>
+            <button onClick={() => getSonAMsg('SonA')}>传递数据给父组件</button>
+        </>
+    )
+}
+
+// 函数组件的SonB
+function SonB(props) {
+    const {getSonBMsg} = props
+    return (
+        <>
+            <div>我是子组件B{getSonBMsg}</div>
+        </>
+    )
+}
+
+// 父组件
+class App extends React.Component{
+    state = {
+        data: ''
+    }
+    // 1、准备一个函数传给子组件A
+    getSonAMsg = (a) => {
+        console.log("接收子组件A传过来的值", a)
+        this.setState({
+            data: a
+        })
+    }
+    render() {
+        return (
+            <div>
+                <SonA getSonAMsg={this.getSonAMsg}></SonA>
+                <SonB getSonBMsg={this.state.data}></SonB>
+            </div>
+        )
+    }
+} 
+
+export default App;
+
+
+
+// 四、跨组件通信Context - 跨多层传递数据
+步骤：  1、创建Context对象，到处 Provider 和 Consumer 对象
+        const { Provider, Consumer } = createContext()
+        2、使用Provide包裹根组件提供数据
+        <Provider value={this is message}></Provider>
+        3、需要用到的数据组件使用Consumer 包裹获取数据
+        <Consumer></Consumer>
+注意：  1、上层组件和下层组件关系是相对的，只要存在就可以使用，通常会通过app作为数据提供；
+        2、固定的语法：（1）提供数据-value={this.state.xxx}；（2）获取数据 - {value => <span>{value}</span}
+实现：
+// App组件 -> A组件 -> C组件；App组件传递数据给C组件
+import React, { createContext } from 'react'
+const {Provider, Consumer} = createContext()
+
+// A组件
+function ComA() {
+    return (
+        <>
+            <div>我是A组件</div>
+            <ComC></ComC>
+        </>
+    )
+}
+// C组件
+function ComC() {
+    return (
+        <>
+            <div>我是C组件</div>
+            <Consumer>
+                {value => <span>{value}</span>}
+            </Consumer>
+        </>
+    )
+}
+// App组件
+class App extends React.Component{
+    state = {
+        message: 'this is message for ComC'
+    }
+    render() {
+        return (
+            <Provider value={this.state.message}>
+                <div>
+                    <ComA></ComA>
+                </div>
+            </Provider>
+        )
+    }
+} 
+
+export default App;
+
+// 五、Children属性

@@ -1,0 +1,34 @@
+import React from 'react'
+class Test extends React.Component{
+    // 方法1：修正handler的this指向
+    // constructor() {
+    //     super()
+    //     // 使用bind强行修正this指向，在类组件初始化时就把回调函数的this指向永远指向当前组件实例
+    //     this.handler = this.handler.bind(this)
+    // }
+
+    // 错误写法（可用方法1修正）
+    // handler() {
+    //     console.log(this) // 输出undefined
+    // }
+
+    render() { // render的this就是指向当前的组件实例
+        return (
+            // <button onClick={this.handler}>click</button> // 方法1
+            
+            // 方法2：不通过constructor修正，直接在事件绑定处通过箭头函数的写法直接沿用父函数中的this指向问题
+            // () => this.handler()的父级函数指向 render
+            <button onClick={() => this.handler()}>click</button>
+        )
+    }
+}
+
+function App() {
+    return (
+        <div className="App">
+            <Test></Test>
+        </div>
+    );
+}
+
+export default App;

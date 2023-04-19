@@ -1,0 +1,78 @@
+import "./index.css"
+import React from 'react'
+// 组件状态 类组件作为演示（惯用的正确写法）
+class TestComponent extends React.Component{
+    // 1、定义组件状态
+    state = {
+        name: 'cp teacher',
+        count: 0,
+        list: [1, 2, 3],
+        delList: [9,8,7,6,5,4,3,2,1],
+        person: {
+            name: 'jack',
+            age: 18
+        }
+    }
+    // 事件回调函数
+    changeState = () => {
+        // 3、修改state中的状态name， react中修改属性要调用setState方法
+        const newArr = [4,5,6,7,8,9,10]
+        this.setState({
+            name: '修改name属性成功',
+            count: this.state.count+1,
+            list: [...this.state.list, ...newArr], // 给数组新加一个数据：先用展开运算符展开，再写入添加的内容
+            person: {
+                ...this.state.person,
+                // 覆盖原来的属性，去修改对象的属性值
+                name: 'rose'
+            },
+            // 删除数组内的元素-filter
+            delList: this.state.delList.filter(item => item === 2) // 删除除了2的其他元素
+        })
+        
+    }
+    render() {
+        // 2、使用状态
+        return (
+            <>
+                <ul className="listStyle">
+                    {this.state.list.map((item) => <li key={item}>{item}</li>)}
+                </ul>
+                <div>
+                    <div>
+                        <p>this isTestCompoent当前name为：{this.state.name}</p>
+                        <p>this isTestCompoent当前count为：{this.state.count}</p>
+                        <p>this isTestCompoent当前list为：{this.state.list}</p>
+                        <p>this isTestCompoent当前person为：{this.state.person.name}</p>
+                        <p>删除数组元素后的delList为：{this.state.delList}</p>
+                        <button onClick={this.changeState}>修改当前state</button>
+                    </div>
+                    <div>
+                        <div>{this.state.count}</div>
+                        <Hello></Hello>
+                    </div>
+                </div>
+            </>
+        )
+    }
+}
+function Hello() {
+    const changeCount = (e, a) => {
+        console.log("传递参数", e, a)
+    }
+    var str = 'string';
+    return (
+        <div>
+            <button onClick={(e) => changeCount(e, str)}>递增</button>
+        </div>
+    )
+}
+function App() {
+    return (
+        <div className="App">
+            <TestComponent></TestComponent>
+        </div>
+    );
+}
+
+export default App;

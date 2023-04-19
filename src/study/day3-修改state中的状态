@@ -1,0 +1,52 @@
+import React from 'react'
+// 组件状态 类组件作为演示（惯用的正确写法）
+class TestComponent extends React.Component{
+    // 1、定义组件状态
+    state = {
+        name: 'cp teacher',
+        data: 1,
+        count: 0
+    }
+    // 事件回调函数
+    changeName = () => {
+        // 3、修改state中的状态name， react中修改属性要调用setState方法
+        this.setState({
+            name: '修改name属性成功'
+        })
+    }
+    render() {
+        // 2、使用状态
+        return (
+            <div>
+                <div>
+                    this isTestCompoent当前name为：{this.state.name}
+                    <button onClick={this.changeName}>修改当前name</button>
+                </div>
+                <div>
+                    <div>{this.state.count}</div>
+                    <Hello></Hello>
+                </div>
+            </div>
+        )
+    }
+}
+function Hello() {
+    const changeCount = (e, a) => {
+        console.log("传递参数", e, a)
+    }
+    var str = 'string';
+    return (
+        <div>
+            <button onClick={(e) => changeCount(e, str)}>递增</button>
+        </div>
+    )
+}
+function App() {
+    return (
+        <div className="App">
+            <TestComponent></TestComponent>
+        </div>
+    );
+}
+
+export default App;

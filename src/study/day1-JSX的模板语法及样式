@@ -1,0 +1,75 @@
+import './css/app.css';
+// 1、识别常规变量
+const name = '谭老师'
+
+// 2、原生方法调用
+const getAge = () => {
+  return 18;
+}
+
+// 3、三元运算符
+const flag = true
+
+// 4、JSX列表渲染：使用原生map方法(重复渲染哪个模板，就return谁)。注意：遍历列表时，需要一个类型为number/string不可重复的key，提高diff性能
+const songs = [
+  { id: 1, name: '痴心绝对' },
+  { id: 2, name: '像我这样的人' },
+  { id: 3, name: '南山南' }
+]
+
+// 5、JSX条件渲染：三元表达式（常用）或者逻辑运算
+// //（1）三元表达式：满足条件渲染一个span标签
+const flag1 = true
+// // (2)逻辑&&运算
+// // (3)复杂的条件渲染：type：1、2、3，type=1返回h1， type=2返回h2，type=3返回h3。
+// 将复杂的逻辑需求写成一个函数，通过一个专门的函数写分支逻辑，模板中只负责调用
+const getHtag = (type) => {
+  if(type === 1) {
+    return <h1>this is h1</h1>
+  } else if (type === 2) {
+    return <h2>this is h2</h2>
+  } else if(type === 3){
+    return <h3>this is h3</h3>
+  }
+}
+// 6、JSX中进行样式处理
+// // (1)行内样式：在元素上绑定style属性。可将style写成一个对象，后在模板内渲染该对象即可
+const style1 = {
+  color: 'yellow',
+  fontSize: '40px'
+}
+// // (2)类名样式: 新建一css文件，写上样式，在元素上绑定className属性，在文件的顶部引入css文件即可
+// 7、动态控制active类名，满足条件才有
+const activeFlag = true
+
+
+function App() {
+    return (
+        <div className="App">
+            { name }
+            { getAge() }
+            { flag ? '真棒' : '真菜' }
+            <ul>
+                { songs.map(song => <li key={song.id}>{ song.name }</li>) }
+            </ul>
+            {/* 5、（1） */}
+            { flag1 ? (
+                <div>
+                    <span>this is span</span>
+                </div>) : null }
+            {/* 5、（2） */}
+            { true && <span>this is span</span> }
+            {/* 5、（3） */}
+            { getHtag(1) }
+            { getHtag(2) }
+            { getHtag(3) }
+            <span style={ {color: 'red', fontSize: '30px'} }>this is red span</span>
+            <span style = { style1 }>this is yellow span</span>
+            <span className="active">this is blue span</span>
+            <span className={ activeFlag ? 'active' : '' }>动态控制类名</span>
+        </div>
+    );
+}
+// 总结： JSX中只能写表达式，不能写if、Switch-case等语句
+
+export default App;

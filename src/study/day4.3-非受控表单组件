@@ -1,0 +1,28 @@
+import React, {createRef} from 'react'
+class Counter extends React.Component{
+    msgRef = createRef() // 创建一个createRef实例对象,作为存储dom的容器
+    // 回调函数
+    getValues = () => {
+        // 通过msgRef获取input的value，this.xxx.current中的current是一个固定属性
+        console.log(this.msgRef.current.value)
+    }
+    // 产出UI模板结构
+    render() {
+        return (
+            <>
+                <input type='text' ref={this.msgRef}></input>
+                <button onClick={this.getValues}>获取输入框的值</button>
+            </>
+        )
+    }
+}
+
+function App() {
+    return (
+        <div className="App">
+            <Counter></Counter>
+        </div>
+    );
+}
+
+export default App;
