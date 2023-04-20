@@ -1,0 +1,90 @@
+// 一、props的类型校验
+实现步骤：
+1、安装校验包： yarn add prop-types
+2、导入prop-types包
+3、使用组件名.propTypes = {} 给组件添加校验规则
+使用场景：常用在组件库，提醒用户哪里需要什么限制
+
+// 二、props的默认值
+方案一、使用defaultProps;方案二、使用函数参数默认值（推荐）
+区别：方案一在用的时候组件内部已经有了传入的参数prop，第二种只有传递的时候组件内部才有这个prop
+
+实例：
+import React from 'react'
+import PropTypes from 'prop-types' // 里面有各种各样的内置校验规则
+
+function Test({list, pageSize=10}) {
+    return (
+        <div>
+            {list.map(item => <p key={item}>{item}</p>)}
+            {pageSize}
+        </div>
+    )
+}
+Test.propTypes = {
+    // 定义规则
+    list: PropTypes.array, // 限定这里的list参数必须是一个数组
+    list: PropTypes.array.isRequired, // 限定这里的list必须是一个数组且是一个必传项
+}
+// 函数组件默认值 - 方案一、使用defaultProps
+// Test.defaultProps = {
+//     pageSize: 10 // 如果传pageSize这个参数没有值就以这里的默认值为主，有值就以传入的为主
+// }
+// 函数组件默认值 - 方案二、使用函数参数默认值（推荐）
+// 直接在函数组件参数处填写默认值，如：Test({pageSize=10})
+
+// App组件：提供数据
+class App extends React.Component{
+    state = {
+    }
+    render() {
+        return (
+            <>
+                <Test  pageSize={8} list={[1,2,3]}></Test>
+            </>
+        )
+    }
+} 
+
+export default App;
+
+
+// 三、类组件的默认值
+方案: 1、defaultProps ；2、static类静态属性定义
+实例：
+import React from 'react'
+
+class Test extends React.Component{
+    // 方案二 - 静态static定义属性（推荐）
+    static defaultProps = {
+        pageSize: 8
+    }
+    render() {
+        return (
+            <div>
+                {this.props.pageSize}
+            </div>
+        )
+    }
+}
+// 没有传值时默认pageSize的值 - 方案一
+Test.defaultProps = {
+    pageSize: 10
+}
+
+
+// App组件：提供数据
+class App extends React.Component{
+    state = {
+    }
+    render() {
+        return (
+            <>
+                {/* 给pageSize传值 */}
+                <Test pageSize={8}></Test>
+            </>
+        )
+    }
+} 
+
+export default App;

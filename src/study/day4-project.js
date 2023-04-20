@@ -3,10 +3,12 @@ import React from 'react'
 
 // ListItem组件：渲染列表
 function ListItem(props) {
-    const { createList, delListItem } = props
+    const { createList, delListItem, children } = props
+    // children()
     return (
         <>
             <h1>我是ListItem组件</h1>
+            { children}
             <ul>
                 {createList.map(
                 item => <li key={item.id}>
@@ -37,7 +39,11 @@ class App extends React.Component{
             <>
                 <div>
                     <h1>this is App</h1>
-                    <ListItem delListItem={this.delListItem} createList={this.state.list}></ListItem>
+                    <ListItem delListItem={this.delListItem} createList={this.state.list}>
+                        {/* <div>this is child</div>  */}{/* children是一个节点 */}
+                        {/* {()=>console.log("child")} */}{/* children是一个函数 */}
+                        {<div><p>{'this is p'}</p></div>}{/* children是一个JSX模板 */}
+                    </ListItem>
                 </div>
             </>
         )

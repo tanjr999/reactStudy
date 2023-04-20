@@ -1,3 +1,5 @@
+// 组件的生命周期（只有通过实例化的类组件才有生命周期，函数组件不需要实例化所以没有生命周期）
+实例：
 import React from 'react'
 
 class Test extends React.Component{
