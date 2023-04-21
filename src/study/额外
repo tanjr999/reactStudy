@@ -1,0 +1,19 @@
+1、vue-router的传参方式
+    (1)<router-link to="参数"/>
+    (2)this.$router.push({
+        path: '路径+参数'
+    })
+    (3)name匹配路由，params传参
+        this.$router.push({
+            name: '路由名',
+            params: {
+                context: '参数'
+            }
+        })
+    (4)query传参
+        this.$router.push({
+            path: '路径',
+            query: {
+                context: '参数'
+            }
+        })

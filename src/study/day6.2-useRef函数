@@ -1,0 +1,33 @@
+import React, { useRef,useEffect } from 'react'
+
+// 组件实例（类组件）
+// dom对象
+class TestC extends React.Component{
+    state = {
+        name: 'test name'
+    }
+    getName = () => {
+        return 'this is child Test'
+    }
+    render() {
+        return (
+            <div>我是类组件</div>
+        )
+    }
+} 
+
+function App() {
+    const testRef = useRef(null) // null为初始值
+    const h1Ref = useRef(null)
+
+    useEffect(() => {
+       console.log(testRef.current, h1Ref.current) 
+    },[])
+    return (
+        <div>
+            <TestC ref={testRef}></TestC>
+            <h1 ref={h1Ref}>this is h1!</h1>
+        </div>
+    )
+}
+export default App;

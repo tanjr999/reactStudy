@@ -1,0 +1,55 @@
+// 一、useState组件传参
+import { useWindowScroll } from "./study/hooks/useWindowScroll";
+import { useLocalStorage } from "./study/hooks/useLocalStorage";
+import './css/app.css'
+
+function App() {
+    const [y] = useWindowScroll()
+    const [message, setMessage] = useLocalStorage('hook-key', '大强')
+    setTimeout(() => {
+        setMessage('小花')
+    }, 1000)
+    return (
+        <div style={{ height: '12000px' }}>
+            <div>{message}</div>
+            <div className="box">
+                <p>{y}</p>
+                <p>{y}</p>
+                <p>{y}</p>
+                <p>{y}</p>
+                <p>{y}</p>
+                <p>{y}</p>
+                <p>{y}</p>
+            </div>
+        </div>
+    )
+}
+export default App;
+
+
+// 二、useState的参数为一个函数
+import './css/app.css'
+import { useState } from "react";
+
+// useState的参数为一个函数
+function Counter(props) {
+    const [count, setCount] = useState(() => {
+        return props.count
+    })
+    return (
+        <div>
+            <p>{count}</p>
+            <button onClick={() => setCount(count + 1)}>递增</button>
+        </div>
+    )
+}
+
+function App() {
+    return (
+        <div>
+            <Counter count={10}></Counter>
+            <Counter count={20}></Counter>
+        </div>
+    )
+}
+export default App;

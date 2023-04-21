@@ -1,0 +1,65 @@
+import React from 'react'
+import { Input, Popconfirm, Table} from 'antd'
+import './css/app.css'
+const { Search } = Input
+// 各组件的使用参考antd文档
+
+class App extends React.Component{
+    // 参数
+    state = {
+        columns: [ // 表头
+            { title: '姓名', dataIndex: 'name', key: 'name' },
+            { title: '年龄', dataIndex: 'age', key: 'age' },
+            { title: '性别', dataIndex: 'sex', key: 'sex' },
+            { title: '电话', dataIndex: 'tel', key: 'tel' },
+            { title: '户籍地', dataIndex: 'address', key: 'address' },
+            {
+                title: '操作',
+                render: (_,record) => (
+                    <Popconfirm title="确认要删除吗？" onConfirm={()=>this.delData(_,record)}>
+                        <a>删除</a>
+                    </Popconfirm>
+                )
+            }
+        ],
+        dataSource: [ // 表格源数据
+            { id: 1, name: '胡彦斌', age: '32', sex: '男', tel: '17894785874', address: '长沙' },
+            { id: 2, name: '郑爽', age: '28', sex: '女', tel: '17894785874', address: '新加坡' },
+            { id: 3, name: '罗云熙', age: '35', sex: '男', tel: '17894785874', address: '四川' },
+            { id: 4, name: '赵丽颖', age: '32', sex: '女', tel: '17894785874', address: '河南' },
+            { id: 5, name: '白鹿', age: '29', sex: '女', tel: '17894785874', address: '甘肃' }
+        ],
+        searchList: []
+    }
+    // 回调函数
+    // 搜索
+    onSearch = (value) => {
+        // 拿到关键词作为参数
+    }
+    // 删除
+    delData = (_, record) => {
+        console.log("删除", record.id)
+        // 调用删除接口
+        this.setState({
+            dataSource: this.state.dataSource.filter(item=>item === record.id)
+        })
+    }
+    render() {
+        return (
+            <div>
+                {/* 搜索框 */}
+                <Search
+                    placeholder="input search text"
+                    allowClear
+                    enterButton="Search"
+                    size="large"
+                    onSearch={this.onSearch}
+                />
+                {/* table表单 */}
+                <Table dataSource={this.state.dataSource} columns={this.state.columns} />
+            </div>
+        )
+    }
+} 
+
+export default App;

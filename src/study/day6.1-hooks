@@ -1,0 +1,155 @@
+// hooks只能在函数组件内使用，作用：让函数组件有自己的状态
+一、hooks的快速使用
+1、从react中导入useState方法；
+2、从函数组件内部执行这个方法，并传入一个初始值；
+3、通过解构赋值（[count, setCount]=useState(0） 得到数据状态和修改数据状态的方法；
+4、渲染数据状态 在某个时机下通过执行方法修改状态
+
+二、状态的读取和修改
+    const [count, setCount] = useState(0)
+1、useState传过来的参数 作为count的初始值；
+2、useState的返回值是一个数组
+   注意[count, setCount]的顺序是不可以换的，第一参数是数据状态，第二参数是修改数据的方法；
+3、setCount函数：用来修改count状态，不能直接修改原值，正确修改方法如下：setCount(基于原值计算得到一个新值)
+
+
+四、组件的更新：当调用setCount时的更新过程
+1、首次渲染：首次渲染时 组件内部的代码会被执行一次，useState也会执行，注意useState(0)，括号里的参数只在首次渲染时生效
+2、更新渲染：每次调用setCount都会更新
+    （1）app组件会再次渲染（这个函数会再次执行）
+    （2）useState再次执行 得到的新count值=修改之后的值，模板会用新值再次渲染
+
+五、注意事项
+1、只能出现在函数组件中；
+2、不能嵌套在if/for/其他函数中。
+
+实例：
+// 1、导入userState（一个参数和一个方法对应一个useState）
+import {useState} from 'react'
+function App() {
+    // 2、执行这个函数并传入初始值，必须在函数组件内
+    const [count, setCount] = useState(0)
+    const [flag, setFlag] = useState(false)
+    const [list, setList] = useState([])
+    return (
+        <div>
+            {/* 3、数据，修改数据的方法 */}
+            <p>count为：{count}</p>
+            {/* 4、使用数据、修改数据 */}
+            <button onClick={() => setCount(count + 1)}>修改</button>
+            <p>flag为:{flag ? '1':'0'}</p>
+            <button onClick={() => setFlag(true)}>修改</button>
+            <p>list为:{list.map(item=><span key={item}>{item}</span>)}</p>
+            <button onClick={() => setList([1,2,3])}>修改</button>
+        </div>
+    )
+}
+export default App;
+
+
+六、函数副作用
+实例：
+import { useState,useEffect } from 'react'
+// // 在修改数据后，把count值放到页面标题中
+// 1、导入useEffect函数
+// 2、在函数组件中执行 传入回调 并定义副作用
+// 3、当我们通过修改状态更新组件时，副作用也会不断执行
+
+// // 通过依赖性控制副作用的执行时机
+// 1、默认状态（无依赖性）：组件初始化的时候先执行一次，等每次修改数据组件更新时再次执行 
+// 2、添加空数组依赖项：(给副作用函数添加一个空数组依赖性)，只会在组件初始化的时候执行一次
+    // useEffect(() => {
+    //     // 定义副作用
+    //     console.log('副作用又执行了')
+    //     document.title=count
+    // },[])
+// 3、添加特定依赖项：副作用函数在首次渲染时执行，在依赖性发送变化时重新执行
+    // useEffect(() => {
+    //     // 定义副作用
+    //     console.log('副作用又执行了')
+    //     document.title=count
+    // },[count])
+    // 当count发送变化时，副作用函数就会执行
+
+function App() {
+    const [count, setCount] = useState(0)
+    const [name,setName] = useState('')
+    useEffect(() => {
+        // 定义副作用
+        console.log('副作用又执行了')
+        document.title=count
+    },[count])
+    return (
+        <div>
+            <p>{count}</p>
+            <button onClick={() => setCount(count + 1)}>递增</button>
+            <div>
+                <p>{name}</p>
+                <button onClick={()=>setName('cp')}>修改name</button>
+            </div>
+        </div>
+    )
+}
+export default App;
+
+// // 七、useEffect-清理副作用
+// 在组件被销毁时，清理有些副作用操作
+实例：import {useEffect, useState} from 'react'
+
+function Test() {
+    useEffect(() => {
+        let timer = setInterval(() => {
+            console.log("定时器执行了")
+        }, 1000)
+        return () => {
+            // return一个新的函数，做清理的动作，组件被销毁的时候，副作用也停止执行
+            clearInterval(timer)
+        }
+    }, [])
+    return (
+        <div>this is test!</div>
+    )
+}
+
+function App() {
+    const [flag,setFlag] = useState(true)
+    return (
+        <div>
+            {flag ? <Test></Test> : null}
+            <button onClick={()=>setFlag(!flag)}>switch</button>
+        </div>
+    )
+}
+export default App;
+
+
+// // 八：useEffect发送网络请求
+// 类组件在生命周期钩子函数（compoentDidMount）发送网络请求，在初始化的时候DOM渲染完毕只执行一次；
+// useEffect发送网络请求
+1、不加依赖性 - 在初始化和重新渲染的时候会执行
+2、加[] - 只在初始化执行一次
+3、加特定的依赖性[count,name] - 在首次执行和任意变化的时候都会执行
+实例：
+import {useEffect} from 'react'
+function App() {
+    useEffect(() => {
+        // 编写请求操作(fetch方法的两种写法)
+        function loadData() {
+            fetch('http://geek.itheima.net/vl_0/channels').then(
+                response => response.json()
+            ).then(data=>console.log(data))
+        }
+        // async function loadData() {
+        //     const res = await fetch('http://geek.itheima.net/vl_0/channels') // fetch：原生的请求方式,fetch('路径')
+        //     console.log(res)
+        // } 
+        loadData()
+    },[])
+    return (
+        <div>
+            
+        </div>
+    )
+}
+export default App;
+
