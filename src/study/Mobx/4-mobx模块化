@@ -1,0 +1,116 @@
+// // 作用：解决了维护性问题，让每个业务组件可以通过统一的方法获取store中的数据
+
+// // 步骤
+// 1、拆分Count和list模块，每个模块定义自己独立的state / action
+// 2、在store / indexedDB.js中导入拆分之后的模块，进行模块组合
+// 3、使用React的useContext机制导出useStore方法，供业务组件统一使用
+
+
+
+// // 实例
+
+// 子模块List.Store
+import {makeAutoObservable} from 'mobx'
+
+// 定义一个类
+class ListStore{
+    // 定义一个原始数据
+    list = ['react', 'vue']
+    constructor() {
+        // 把数据弄成响应式(必要的)
+        makeAutoObservable(this)
+    }
+    // 定义计算属性
+    get filterList() {
+        return this.list.filter(item => item > 2)
+    }
+    // 方法修改list
+    addList = () => {
+        this.list.push('js','angular')
+    }
+}
+
+// 导出
+export {ListStore} 
+
+
+// 子模块Counter.Store
+// // 编写第一个mobx：实现计数器案例
+import {makeAutoObservable} from 'mobx'
+
+// 定义一个类
+class CountStore{
+    // 1、定义数据
+    count = 0
+    constructor() {
+        // 2、把数据弄成响应式
+        makeAutoObservable(this)
+    }
+    // 3、定义操作函数（修改数据）
+    addCount = () => {
+        this.count++
+    }
+}
+
+class watchStore{
+    value = '8888'
+}
+
+// 导出
+export {CountStore, watchStore} 
+
+
+
+// 根模块index: 组合子模块，封装统一导出供业务使用的方法
+import React from 'react'
+// 导入子模块
+// 组合子模块，封装统一导出供业务使用的方法
+import React from 'react'
+// 导入子模块
+import { ListStore } from './List.Store'
+import { CountStore,  watchStore} from './Counter.Store'
+
+// 1、声明一个rootStore
+class RootStore{
+    constructor() {
+        // 2、实例化子模块
+        this.counterStore = new CountStore()
+        this.watchStore = new watchStore()
+        this.listStore = new ListStore()
+    }
+}
+
+// 3、使用React useContext机制完成统一方法封装
+const rootStore = new RootStore() // 根实例化操作
+const context = React.createContext(rootStore)
+const useStore = () => React.useContext(context) // 通过useContext拿到rootStore实例对象然后返回，只要在业务组件中调用useStore即可使用rootStore.
+
+export {useStore} // 导出
+
+
+
+
+// app.js  组件使用
+import { useStore } from './store/index' // 1、引入store的总模块文件
+import { observer } from "mobx-react-lite" // 2、导入中间件链接mobx、react，完成响应式变化
+
+function App() {
+    const rootStore = useStore() // 获取总模块文件里面的所有属性
+    const {counterStore, watchStore} = useStore() // 解构赋值使用
+
+    return (
+        <div>
+            <h1>{watchStore.value}</h1>
+            {/* 使用rootStore中的属性方法 */}
+            <h1>{rootStore.counterStore.count}</h1>
+            <h2>解构赋值：{counterStore.count}</h2>
+            <button onClick={rootStore.counterStore.addCount}>count递增</button>
+            <button onClick={counterStore.addCount}>解构赋值count递增</button>
+        </div>
+    )
+}
+
+// 3、用observer方法包裹组件名
+export default observer(App)
+
+

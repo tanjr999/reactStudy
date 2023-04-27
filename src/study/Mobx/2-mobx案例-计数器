@@ -1,0 +1,41 @@
+// // 1、编写mobx(写明参数、方法)
+import {makeAutoObservable} from 'mobx'
+
+// 定义一个类
+class CounterStore{
+    // 1、定义数据
+    count = 0
+    constructor() {
+        // 2、把数据弄成响应式
+        makeAutoObservable(this)
+    }
+    // 3、定义操作函数（修改数据）
+    addCount = () => {
+        this.count++
+    }
+}
+
+// 4、实例化，导出给react使用
+const counterStore = new CounterStore()
+export { counterStore } 
+
+
+
+// // 2、react使用mobx
+import { counterStore } from "./store/counter" // 1、引入定义好的store
+import { observer } from "mobx-react-lite" // 2、导入中间件链接mobx、react，完成响应式变化
+
+function App() {
+    return (
+        <div>
+            <h1>app</h1>
+            {/* 把store中的count渲染一下 */}
+            <h2>{counterStore.count}</h2>
+            {/* 通过点击事件修改count的值 */}
+            <button onClick={counterStore.addCount}>修改</button>
+        </div>
+    )
+}
+
+// 3、用observer方法包裹组件名
+export default observer(App)

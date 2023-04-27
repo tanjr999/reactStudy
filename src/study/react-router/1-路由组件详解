@@ -1,0 +1,66 @@
+// 一、核心组件 - BrowserRouter
+作用： 包裹整个应用，一个react应用使用一次
+两种常用router： HashRouter（hash）和BrowserRouter（非hash， 推荐）
+
+// 二、核心组件 - Link
+作用： 用于指定导航链接完成路由跳转（相当于一个a标签中的href属性）
+示例：<Link to="/路径">页面一</Link>
+
+// 三、核心组件 - Routes
+作用： 通过一个路由出口，满足条件的路由组件会渲染到组件内部
+示例：
+<Routes>
+    <route></route>
+</Routes>
+
+// 四、核心组件 - Route
+作用： 用于指定导航链接，完成路由匹配；path属性指定匹配的组件路径，element属性指定要渲染的组件
+示例：<route path="/about" element={<About/>}></route>
+
+
+// 五、案例
+// 引入两个组件
+import About from './pages/react-router/About'
+import Home from './pages/react-router/Home'
+
+// 进行路由配置
+// // 步骤
+// 1、从‘react-router-dom’中引入{BrowserRouter, Link, Routes, Route}函数
+// 2、<BrowserRouter><BrowserRouter/>声明当前要使用一个非hash模式的路由
+// 3、<Link to="/"></Link>指定需要跳转的组件 to用来配置路由地址
+// 4、<Routes></Routes>是路由出口 路由对应的组件会在这里进行渲染
+// 5、<Route path="/" element={}/>指定路径和组件的对应关系，path代表路径，element代表组件，成对出现
+import {HashRouter, BrowserRouter, Link, Routes, Route} from 'react-router-dom' // 导入依赖
+
+function App() {
+    return (
+        <div>
+            {/* 非HashRouter */}
+            <BrowserRouter>
+                <Link to="/">首页</Link>
+                <Link to="/about">关于</Link>
+                <Routes>
+                    <Route path="/" element={<Home></Home>}/>
+                    <Route path="about" element={<About></About>}/>
+                </Routes>
+            </BrowserRouter>
+            {/* HashRouter */}
+            <HashRouter>
+                <Link to="/">首页</Link>
+                <Link to="/about">关于</Link>
+                <Routes>
+                    <Route path="/" element={<Home></Home>}/>
+                    <Route path="about" element={<About></About>}/>
+                </Routes>
+            </HashRouter>
+        </div>
+    )
+}
+
+export default App
+
+
+
+// // reactrouter更多细节文档查看 https://reactrouter.com/en/6.10.0/start/overview#feature-overview
+
+

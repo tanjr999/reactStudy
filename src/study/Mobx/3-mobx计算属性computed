@@ -1,0 +1,47 @@
+// // 实现步骤
+// 1、声明一个存在的数据
+// 2、定义get计算属性
+// 3、在markAutoObservable方法中标记
+
+// mobx代码
+import {makeAutoObservable} from 'mobx'
+// 定义一个类
+class CounterStore{
+    // 定义一个原始数据
+    list = [1, 2, 3, 4, 5, 6]
+    constructor() {
+        // 把数据弄成响应式(必要的)
+        makeAutoObservable(this)
+    }
+    // 定义计算属性
+    get filterList() {
+        return this.list.filter(item => item > 2)
+    }
+    // 方法修改list
+    addList = () => {
+        this.list.push(7,8,9)
+    }
+}
+// 实例化，导出给react使用
+const counterStore = new CounterStore()
+export {counterStore} 
+
+
+
+// react使用
+import { counterStore } from "./store/counter" // 1、引入定义好的store
+import { observer } from "mobx-react-lite" // 2、导入中间件链接mobx、react，完成响应式变化
+
+function App() {
+    return (
+        <div>
+            <h1>app</h1>
+            {/* 使用计算属性 */}
+            <h3>{counterStore.filterList.join('-')}</h3>
+            {/* 修改数组list */}
+            <button onClick={counterStore.addList}>修改list</button>
+        </div>
+    )
+}
+// 3、用observer方法包裹组件名
+export default observer(App)

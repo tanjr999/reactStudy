@@ -1,0 +1,22 @@
+// // 说明：通过js编程的方式进行路由页面跳转（从登录页跳转到about）
+案例：
+// 1、导入useNavigate函数
+import { useNavigate } from "react-router-dom"
+
+function Login() {
+    // 2、执行useNavigate 得到一个跳转函数
+    const navigate = useNavigate()
+    function goAbout() {
+        // navigate('/about') // 3、给跳转函数传入目标路径
+        navigate('/about', {replace: true}) // replace的参数值为flase时返回的是上一个组件，为true时只会返回上一级
+    }
+    // 跳转到about页
+    return (
+        <div>
+            <h1>登录页</h1>
+            <button onClick={goAbout}>跳转到about页</button>
+        </div>
+    )
+}
+
+export default Login

@@ -1,0 +1,74 @@
+body{
+    width: 100%;
+    height: 100vh;
+    background: #f5f5f5;
+}
+.box{
+    width: 70%;
+    margin: 30px auto;
+}
+.title{
+    color: rgba(175,47,47,.15);
+    font-size: 90px;
+    text-align: center;
+    font-weight: 800;
+}
+.form{
+    width: 100%;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,.2), 0 25px 50px 0 rgba(0,0,0,.1);
+    background: #fff;
+}
+.form-content{
+    padding: 20px 20px;
+}
+.form-content-top{
+    display: flex;
+    align-items: center;
+}
+.input input{
+    height: 40px;
+    width: 350px;
+    margin-left: 10px;
+    border: none;
+    font-size: 24px;
+    text-indent: 20px;
+}
+.item{
+    display: flex;
+    margin-top: 10px;
+    font-size: 24px;
+    color: #4d4d4d;
+    border-bottom: 1px solid #d7d7d7;
+    padding: 20px 0 20px 0;
+    align-items: center;
+}
+.compeleted{
+    color: #d7d7d7;
+    display: flex;
+    margin-top: 10px;
+    font-size: 24px;
+    border-bottom: 1px solid #d7d7d7;
+    padding: 20px 0 20px 0;
+    align-items: center;
+}
+.compeleted .item-content{
+    text-decoration: line-through;
+}
+.checkRdio input{
+    width: 30px;
+    height: 30px;
+}
+.item-content{
+    margin-left: 20px;
+}
+.delete{
+    /* display: none; */
+    font-size: 30px;
+    margin-left: auto;
+    color: #ba6f09;
+    border: none;
+    background: #fff;
+}
+.form-content-bottom{
+    margin-top: 10px;
+}

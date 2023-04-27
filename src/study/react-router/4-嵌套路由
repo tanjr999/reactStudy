@@ -1,0 +1,100 @@
+// // 准备页面：app、login、layout、borad、artical、notpages
+// 步骤
+1、嵌套路由
+    在需要嵌套的地方（route）里面添加<route></route>
+    {/* 一级路由 */}
+    <Route path='/login' element={<Login></Login>}></Route>
+    <Route path='/' element={<Layout></Layout>}>
+        {/* 二级路由 */}
+        <Route path='borad' element={<Borad></Borad>}></Route>
+        <Route path='artical' element={<Artical></Artical>}></Route>
+    </Route>
+2、给路由添加出口
+    在需要二级路由的页面导入OutLet组件：import { Outlet } from "react-router-dom" 
+    在合适的位置写入组件：<Outlet></Outlet>
+
+
+3、404路由配置
+{/* 当所有的路径都没有匹配时显示 */}
+<Route path='*' element={<NotPages></NotPages>}></Route>
+
+
+// // 实例
+// App页（注册路由）
+import './css/app.css'
+// 引入组件
+import Layout from './pages/react-router/Layout'
+import Login from './pages/react-router/Login'
+import Borad from './pages/react-router/Borad'
+import Artical from './pages/react-router/Artical'
+import NotPages from './pages/react-router/NotPages'
+
+// 配置路由
+import { HashRouter, BrowserRouter, Link, Routes, Route } from 'react-router-dom' // 导入依赖
+
+function App() {
+    return (
+        <div className='box'>
+            <div className='box-content'>
+                <BrowserRouter>
+                    <div className='item'>
+                        <Link to="/login">登录</Link>
+                    </div>
+                    <div className='item'>
+                        <Link to="/">看板</Link>
+                    </div>
+                    {/* 渲染组件 */}
+                    <div>渲染组件内容</div>
+                    <Routes>
+                        <Route path='/login' element={<Login></Login>}></Route>
+                        <Route path='/' element={<Layout></Layout>}>
+                            {/* 二级路由 */}
+                            <Route path='borad' element={<Borad></Borad>}></Route>
+                            <Route path='artical' element={<Artical></Artical>}></Route>
+                        </Route>
+                        {/* 当所有的路径都没有匹配时显示 */}
+                        <Route path='*' element={<NotPages></NotPages>}></Route>
+                    </Routes>
+                </BrowserRouter>
+            </div>
+        </div>
+    )
+}
+
+export default App
+
+
+// layout页（需要二级路由的页面：写上二级路由的出口）
+import { Outlet } from "react-router-dom" // 导入Outlet组件获取二级路由
+
+function Layout() {
+    return (
+        <div>
+            <h1>Layout</h1>
+            {/* 二级路由的出口 */}
+            <Outlet></Outlet>
+        </div>
+    )
+}
+
+export default Layout
+
+// NotPages页（当所有路径都不匹配的时候显示该页面），适合做全局配置
+function NotPages() {
+    return (
+        <div>
+            <h1>sorry,this page is lost</h1>
+        </div>
+    )
+}
+export default NotPages
+
+
+// // 默认二级路由设置
+// 思路：给需要添加成默认路由的route添加index属性，不要path参数
+<Route path='/' element={<Layout></Layout>}>
+    {/* 二级路由 */}
+    {/* 默认二级路由：添加index属性，不要path参数 */}
+    <Route index element={<Borad></Borad>}></Route>
+    <Route path='artical' element={<Artical></Artical>}></Route>
+</Route>

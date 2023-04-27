@@ -1,0 +1,101 @@
+// //方式一：searchParams传参
+// 传递参数：navigate('/about?id=1001')
+// 接收参数:  
+    1、导入useSearchParams函数获取参数: import { useSearchParams } from "react-router-dom"
+    2、实例一个useSearchParams函数: const [parmas] = useSearchParams()
+    3、把参数名称作为get方法的实参传过来: const id = parmas.get('id')
+
+// // 方式二、parmas传参
+// 传递参数：navigate('/about/1001')，路由配置处：<Route path="about/:id" element={<About></About>} />
+// 接收参数：
+    1、导入useParams函数： import { useParams } from "react-router-dom"
+    2、实例一个useParams对象：const params = useParams()
+    3、使用参数：params.id
+
+
+
+
+
+
+
+
+
+// // 实例
+
+// Login页（传递参数）
+// 1、导入useNavigate函数
+import { useNavigate } from "react-router-dom"
+
+function Login() {
+    // 2、执行useNavigate 得到一个跳转函数
+    const navigate = useNavigate()
+    function goAbout() {
+        // navigate('/about?id=1001') // searchParams传递参数
+        // navigate('/about?id=1001&name="tjr"') // searchParams传递多个参数
+
+        navigate('/about/1001') // params传参，路由配置方方法要改变
+    }
+    // 跳转到about页
+    return (
+        <div>
+            <h1>登录页</h1>
+            <button onClick={goAbout}>跳转到about页</button>
+        </div>
+    )
+}
+
+export default Login
+
+
+// About页（接收参数）
+import { useSearchParams, useParams} from "react-router-dom" // 导入useSearchParams和useParams函数获取参数
+
+function Abount() {
+    // parmas是一个对象，里面的get方法用来获取对应的参数
+    // // 获取参数方式一: parmas.get('参数名')
+    // const [parmas] = useSearchParams() // useSearchParams获取searchParams传参
+    // const id = parmas.get('id') // 把参数名称作为get方法的实参传过来
+    // const name = parmas.get('name')
+
+    // // 获取参数方式二: params.参数名获取
+    const parmas = useParams() // useParams获取params传参
+    return (
+        <div>
+            <h1>about</h1>
+            {/* <div>about得到的参数为：{id}, {name}</div> */}
+            <div>about得到的参数为：{parmas.id}</div>
+        </div>
+    )
+}
+
+export default Abount
+
+// 定义路由页
+
+// 引入两个组件
+import About from './pages/react-router/About'
+import Home from './pages/react-router/Home'
+import Login from './pages/react-router/Login'
+
+import { HashRouter, BrowserRouter, Link, Routes, Route } from 'react-router-dom' // 导入依赖
+
+function App() {
+    return (
+        <div>
+            {/* 非HashRouter */}
+            <BrowserRouter>
+                <Link to="/">首页</Link>
+                <Link to="/about">关于</Link>
+                <Routes>
+                    <Route path="/" element={<Home></Home>}/>
+                    {/* <Route path="about" element={<About></About>} /> */} {/* searchParams传参的路由定义方法 */}
+                    <Route path="about/:id" element={<About></About>} /> {/* params传参的路由定义方法 */}
+                    <Route path="login" element={<Login></Login>}></Route>
+                </Routes>
+            </BrowserRouter> 
+        </div>
+    )
+}
+
+export default App
+
