@@ -1,6 +1,7 @@
 // react: 框架核心包
 // reactDom: 专门做渲染相关的包
 
+import 'antd/dist/antd.min.css' // 引入antd样式文件
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 // 应用的全局样式文件
