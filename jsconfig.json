@@ -1,6 +1,4 @@
-// 配置路径输入提示，该文件与react无关，是与vscode的配合
-
-{
+{   // 配置路径输入提示，该文件与react无关，是与vscode的配合
     "compilerOptions": {
         "baseUrl": "./",
         "paths":{
